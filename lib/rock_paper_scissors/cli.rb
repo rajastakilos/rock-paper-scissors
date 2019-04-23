@@ -6,22 +6,22 @@ module RockPaperScissors
     NO_RESPONSES  = ['N', 'No', 'no', 'nein', 'naw', 'nyet', 'NO']
 
     def start
-      welcome_user
-      get_username
+      welcome_player
+      get_player_name
       explain_rules
-      check_user_readiness
+      check_player_readiness
     end
 
-    def welcome_user
+    def welcome_player
       puts 'WELCOME to rOcK pApEr sCiSsOrS'
       puts
     end 
 
-    def get_username
+    def get_player_name
       puts "Please enter your name."
       puts
       name = gets.chomp 
-      @user = User.new(name) 
+      @player = Player.new(name) 
       puts
       puts "Welcome #{name}."
       puts
@@ -39,7 +39,7 @@ module RockPaperScissors
       puts
     end
 
-    def check_user_readiness
+    def check_player_readiness
       puts 'Are you ready?'
       puts
       response = gets.chomp
@@ -48,7 +48,7 @@ module RockPaperScissors
       if YES_RESPONSES.include?(response)
         puts 'Let\'s Start!'
         puts
-        play
+        launch_game
       elsif NO_RESPONSES.include?(response)
         puts 'Okay. I\'ll wait. You have five seconds.'
         puts
@@ -67,15 +67,15 @@ module RockPaperScissors
           puts
         elsif YES_RESPONSES.include?(second_response)
           puts 'Finally.'
-          play
+          launch_game
         else
           puts 'You lose.'
         end
       end
     end
 
-    def play
-      Game.new(@user).play
+    def launch_game
+      Game.new(@player).play
     end
   end
 end

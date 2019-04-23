@@ -2,32 +2,32 @@ RSpec.describe RockPaperScissors::CLI do
   describe 'Game' do
     let(:yes_response) { 'Yes' }    
     let(:no_response) { 'No' }
-    let(:username) { 'Rajas' }
+    let(:player_name) { 'Rajas' }
 
-    describe '#welcome_user' do
+    describe '#welcome_player' do
       let(:welcome_message) { 'WELCOME to rOcK pApEr sCiSsOrS' }
 
-      it 'greets a new user when the game loads' do
+      it 'greets a new player when the game loads' do
         expect { 
-          RockPaperScissors::CLI.new.welcome_user
+          RockPaperScissors::CLI.new.welcome_player
         }.to output(a_string_including(welcome_message)).to_stdout
       end
     end
 
-    describe '#get_username' do
-      let(:request_for_username) { 'Please enter your name' }
-      let(:greeting_with_name) { "Welcome #{username}" }
+    describe '#get_player_name' do
+      let(:request_for_player_name) { 'Please enter your name' }
+      let(:greeting_with_name) { "Welcome #{player_name}" }
 
-      it 'asks the user to enter their name' do
+      it 'asks the player to enter their name' do
         expect do
-          RockPaperScissors::CLI.new.get_username
-        end.to output(a_string_including(request_for_username)).to_stdout end
+          RockPaperScissors::CLI.new.get_player_name
+        end.to output(a_string_including(request_for_player_name)).to_stdout end
 
-      it 'greets the user by their name' do
-        allow_any_instance_of(RockPaperScissors::CLI).to receive(:gets).and_return(username)
+      it 'greets the player by their name' do
+        allow_any_instance_of(RockPaperScissors::CLI).to receive(:gets).and_return(player_name)
 
         expect do
-          RockPaperScissors::CLI.new.get_username
+          RockPaperScissors::CLI.new.get_player_name
         end.to output(a_string_including(greeting_with_name)).to_stdout
       end
     end
@@ -47,7 +47,7 @@ RSpec.describe RockPaperScissors::CLI do
       end
     end
 
-    describe '#check_user_readiness' do
+    describe '#check_player_readiness' do
       let(:lets_start_statement) { 'Let\'s Start!' }
 
       describe 'general' do
@@ -55,7 +55,7 @@ RSpec.describe RockPaperScissors::CLI do
 
         it 'asks for readiness' do
           expect do 
-            RockPaperScissors::CLI.new.check_user_readiness
+            RockPaperScissors::CLI.new.check_player_readiness
           end.to output(a_string_including(readiness_statement)).to_stdout
         end   
       end
@@ -63,13 +63,13 @@ RSpec.describe RockPaperScissors::CLI do
       describe 'yes' do
         before do
           allow_any_instance_of(RockPaperScissors::CLI).to receive(:gets).and_return(yes_response)
-          allow_any_instance_of(RockPaperScissors::CLI).to receive(:play)
+          allow_any_instance_of(RockPaperScissors::CLI).to receive(:launch_game)
         end
  
         it 'asks for readiness and calls play' do #TODO: Separate?
-          expect_any_instance_of(RockPaperScissors::CLI).to receive(:play)
+          expect_any_instance_of(RockPaperScissors::CLI).to receive(:launch_game)
           expect do 
-            RockPaperScissors::CLI.new.check_user_readiness
+            RockPaperScissors::CLI.new.check_player_readiness
           end.to output(a_string_including(lets_start_statement)).to_stdout
         end   
       end
@@ -92,24 +92,25 @@ RSpec.describe RockPaperScissors::CLI do
 
           it 'asks for readiness' do
             expect do 
-              RockPaperScissors::CLI.new.check_user_readiness
+              RockPaperScissors::CLI.new.check_player_readiness
             end.to output(a_string_including(lets_wait_response)).to_stdout
           end
 
           it 'counts down from 5 to 0' do
+            expect_any_instance_of(RockPaperScissors::CLI).to receive(:sleep).exactly(6).times
             expect do 
-              RockPaperScissors::CLI.new.check_user_readiness
+              RockPaperScissors::CLI.new.check_player_readiness
             end.to output(a_string_including(five, four, three, two, one, zero)).to_stdout
           end
 
           it 'asks again after 5 seconds' do
             expect do 
-              RockPaperScissors::CLI.new.check_user_readiness
+              RockPaperScissors::CLI.new.check_player_readiness
             end.to output(a_string_including(meow_response)).to_stdout
           end
         end
 
-        describe 'user says no the second time' do
+        describe 'player says no the second time' do
           let(:still_no_message) { 'Fine. Don\'t play' }
 
           before do
@@ -119,12 +120,12 @@ RSpec.describe RockPaperScissors::CLI do
 
           it 'displays still no message' do
             expect do 
-              RockPaperScissors::CLI.new.check_user_readiness
+              RockPaperScissors::CLI.new.check_player_readiness
             end.to output(a_string_including(still_no_message)).to_stdout
           end
         end
 
-        describe 'user says yes the second time' do
+        describe 'player says yes the second time' do
           let(:finally_message) { 'Finally.' }
 
           before do
@@ -133,19 +134,19 @@ RSpec.describe RockPaperScissors::CLI do
           end
 
           it 'displays lets start message' do
-            expect_any_instance_of(RockPaperScissors::CLI).to receive(:play) 
+            expect_any_instance_of(RockPaperScissors::CLI).to receive(:launch_game)
             expect do 
-              RockPaperScissors::CLI.new.check_user_readiness
+              RockPaperScissors::CLI.new.check_player_readiness
             end.to output(a_string_including(finally_message)).to_stdout
           end
         end
       end
     end
 
-    describe '#play' do
+    describe '#launch_game' do
       it 'starts a game' do
         expect_any_instance_of(RockPaperScissors::Game).to receive(:play)
-        RockPaperScissors::CLI.new.play
+        RockPaperScissors::CLI.new.launch_game
       end 
     end
   end

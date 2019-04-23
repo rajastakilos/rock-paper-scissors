@@ -1,5 +1,7 @@
 module RockPaperScissors
-  class User
+  #attr_accessor :reader
+
+  class Player
     def initialize(name)
       @name = name
     end
