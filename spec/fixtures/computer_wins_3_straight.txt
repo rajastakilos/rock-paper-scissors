@@ -1,0 +1,39 @@
+1
+
+2
+
+3
+
+SHOOT!
+
+
+Computer wins!
+rock beats scissors
+
+1
+
+2
+
+3
+
+SHOOT!
+
+
+Computer wins!
+paper beats rock
+
+1
+
+2
+
+3
+
+SHOOT!
+
+
+Computer wins!
+scissors beats paper
+
+OMG! Computer WINS!
+
+Thanks for playing Rock, Paper, Scissors, Rajas!
