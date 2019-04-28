@@ -2,6 +2,8 @@ require 'rock_paper_scissors/version'
 
 module RockPaperScissors
   class CLI
+    attr_reader :player
+
     YES_RESPONSES = ['Y', 'yes', 'Yes', 'yeah', 'Yeah', 'Sure']
     NO_RESPONSES  = ['N', 'No', 'no', 'nein', 'naw', 'nyet', 'NO']
 
@@ -75,7 +77,12 @@ module RockPaperScissors
     end
 
     def launch_game
-      Game.new(@player).play
+      Game.new(self, player.name).play
     end
+
+    def end_player_session
+      puts "Thanks for playing Rock, Paper, Scissors, #{player.name}!"
+      puts
+    end    
   end
 end

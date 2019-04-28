@@ -4,13 +4,32 @@ RSpec.describe RockPaperScissors::CLI do
     let(:no_response) { 'No' }
     let(:player_name) { 'Rajas' }
 
+    describe('#start') do
+      let(:cli_instance) { RockPaperScissors::CLI.new }
+
+      before do
+        allow(cli_instance).to receive(:welcome_player)
+        allow(cli_instance).to receive(:get_player_name)
+        allow(cli_instance).to receive(:explain_rules)
+        allow(cli_instance).to receive(:check_player_readiness)
+      end
+
+      it('goes through the start-up flow') do
+        cli_instance.start
+        expect(cli_instance).to have_received(:welcome_player)
+        expect(cli_instance).to have_received(:get_player_name)
+        expect(cli_instance).to have_received(:explain_rules)
+        expect(cli_instance).to have_received(:check_player_readiness)
+      end
+    end
+
     describe '#welcome_player' do
       let(:welcome_message) { 'WELCOME to rOcK pApEr sCiSsOrS' }
 
       it 'greets a new player when the game loads' do
-        expect { 
+        expect do
           RockPaperScissors::CLI.new.welcome_player
-        }.to output(a_string_including(welcome_message)).to_stdout
+        end.to output(a_string_including(welcome_message)).to_stdout
       end
     end
 
@@ -44,7 +63,7 @@ RSpec.describe RockPaperScissors::CLI do
            You have two seconds to respond.
            If you don't respond, then I win the whole game.
            RULES
-      end
+      end #NOTE: NO longer an accurate statement given the game
     end
 
     describe '#check_player_readiness' do
@@ -144,10 +163,35 @@ RSpec.describe RockPaperScissors::CLI do
     end
 
     describe '#launch_game' do
+      let(:cli) { RockPaperScissors::CLI.new } 
+      let(:player) { RockPaperScissors::Player.new('Rajas') }
+
+      before do 
+        cli.instance_variable_set(:@player, player)
+
+        allow_any_instance_of(RockPaperScissors::Game).to receive(:play)
+      end
+
       it 'starts a game' do
         expect_any_instance_of(RockPaperScissors::Game).to receive(:play)
-        RockPaperScissors::CLI.new.launch_game
+        cli.launch_game
       end 
+    end
+
+    describe '#end_player_session' do
+      let(:player) { RockPaperScissors::Player.new('Rajas') }
+      let(:exit_message) { "Thanks for playing Rock, Paper, Scissors, #{player.name}!" }
+      let(:cli) { RockPaperScissors::CLI.new }
+
+      before do
+        cli.instance_variable_set(:@player, player)
+      end
+
+      it 'delivers the exit script' do
+        expect do
+          cli.end_player_session
+        end.to output(a_string_including(exit_message)).to_stdout
+      end
     end
   end
 end
